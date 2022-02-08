@@ -1,0 +1,10 @@
+main
+    integer x;
+    string y;
+
+    % x;
+    % y;
+
+    ? x;
+    ? y;
+end main;
