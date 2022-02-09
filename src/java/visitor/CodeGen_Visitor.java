@@ -23,7 +23,7 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
 
         File file = new File("test_files" + File.separator + "c_out" + File.separator + name.substring(lastIndex, name.length() - 4) + ".c");
         if (file.exists()) {
-             file.delete();
+            file.delete();
         }
         file.createNewFile();
         System.out.print("File " + file.getName() + " creato nella cartella \"test_files" + File.separator + "c_out\" !!!");
@@ -283,6 +283,10 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
             statNode.whileStatNode.accept(this);
         }
 
+        if (statNode.caseStatNode != null) {
+            statNode.caseStatNode.accept(this);
+        }
+
         if (statNode.readStatNode != null) {
             statNode.readStatNode.accept(this);
         }
@@ -354,6 +358,45 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
         }
 
         wr.print("\n}\n");
+    }
+
+    @Override
+    public void visit(CaseStatNode caseStatNode) {
+        wr.print("switch(");
+        caseStatNode.expr.accept(this);
+        wr.print(") {\n");
+
+        for (WhenNode whenNode : caseStatNode.whenList) {
+            whenNode.accept(this);
+        }
+
+        if (caseStatNode.elseNode != null) {
+            wr.print("default:");
+            for (VarDeclNode varDeclNode : caseStatNode.elseNode.varDeclList) {
+                varDeclNode.accept(this);
+            }
+            for (StatNode statNode : caseStatNode.elseNode.statList) {
+                statNode.accept(this);
+            }
+            wr.print("break;");
+        }
+        wr.print("\n}\n");
+    }
+
+    @Override
+    public void visit(WhenNode whenNode) {
+        wr.print("case ");
+        whenNode.expr.accept(this);
+        wr.print(": ");
+
+        for (VarDeclNode varDeclNode : whenNode.varDeclList) {
+            varDeclNode.accept(this);
+        }
+        for (StatNode statNode : whenNode.statList) {
+            statNode.accept(this);
+        }
+
+        wr.print("break;");
     }
 
     @Override

@@ -3,6 +3,8 @@ package visitor;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import javax.annotation.meta.When;
+
 import symbol_table.*;
 import tree.leaves.*;
 import tree.nodes.*;
@@ -225,6 +227,8 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
             statNode.ifStatNode.accept(this);
         } else if (statNode.whileStatNode != null) {
             statNode.whileStatNode.accept(this);
+        } else if (statNode.caseStatNode != null) {
+            statNode.caseStatNode.accept(this);
         } else if (statNode.readStatNode != null) {
             statNode.readStatNode.accept(this);
         } else if (statNode.writeStatNode != null) {
@@ -342,6 +346,62 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
     }
 
     @Override
+    public void visit(CaseStatNode caseStatNode) {
+        caseStatNode.expr.accept(this);
+        caseStatNode.type = caseStatNode.expr.type;
+
+        for (WhenNode whenNode : caseStatNode.whenList) {
+            whenNode.accept(this);
+            if (caseStatNode.type != whenNode.type) {
+                System.err.println("ERRORE");
+            }
+        }
+
+        if (caseStatNode.elseNode != null)
+            caseStatNode.elseNode.accept(this);
+
+        // DEBUG
+        if (debugTab) {
+            System.out.println("Tabella " + stack.peek().symbolTableName + " | padre: " + stack.peek().fatherSymbolTable.symbolTableName + " |");
+            for (String key : stack.peek().keySet())
+                System.out.println(key + ": " + stack.peek().get(key).toString());
+            System.out.println("-----------------------------------------------------");
+        }
+    }
+
+    @Override
+    public void visit(WhenNode whenNode) {
+        whenNode.expr.accept(this);
+        whenNode.type = whenNode.expr.type;
+
+        // Creo una nuova tabella e setto il padre come il top dello stack (Il
+        // chiamante) e inserisco
+        SymbolTable symbolTable = new SymbolTable(whenNode.name);
+        symbolTable.setFatherSymTab(stack.peek());
+        stack.push(symbolTable);
+
+        // Controllo la lista di dichiarazioni di variabili
+        for (VarDeclNode varDeclNode : whenNode.varDeclList)
+            varDeclNode.accept(this);
+
+        // Controllo la lista di statements
+        for (StatNode statNode : whenNode.statList)
+            statNode.accept(this);
+
+        // DEBUG
+        if (debugTab) {
+            System.out.println("Tabella " + stack.peek().symbolTableName + " | padre: " + stack.peek().fatherSymbolTable.symbolTableName + " |");
+            for (String key : stack.peek().keySet())
+                System.out.println(key + ": " + stack.peek().get(key).toString());
+            System.out.println("-----------------------------------------------------");
+        }
+
+        // Rimuovo la ST dallo stack, in quanto non serve più
+        stack.pop();
+
+    }
+
+    @Override
     public void visit(ReadStatNode readStatNode) {
         // Controllo il tipo dell'espressione della READ, se c'è
         if (readStatNode.expr != null) {
@@ -433,7 +493,7 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
         SymbolTableEntry functionDef = symbolTable.containsFunctionEntry(symbolTable.symbolTableName);
 
         // Risalgo fino alla tabella Global
-        while (functionDef == null){
+        while (functionDef == null) {
             symbolTable = symbolTable.fatherSymbolTable;
             functionDef = symbolTable.containsFunctionEntry(symbolTable.symbolTableName);
         }

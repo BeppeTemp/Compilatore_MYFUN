@@ -39,4 +39,6 @@ public interface CodeGen_Int_Visitor {
     public void visit(LeafBool leafBool);
     public void visit(LeafRealConst leafRealConst);
     public void visit(LeafStringConst leafStringConst);
+    public void visit(CaseStatNode caseStatNode);
+    public void visit(WhenNode whenNode);
 }

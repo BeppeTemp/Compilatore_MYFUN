@@ -1,21 +1,37 @@
-<IF>
-<THEN>
-<ELSE>
-<WHILE>
+<MAIN>
 <INTEGER>
-<ID, id_ciao>
-<EQ>
-<REAL_CONST, 2.4>
+<ID, exp>
+<ASSIGN>
+<INTEGER_CONST, 2>
 <SEMI>
-<ID, id_arrivederci>
-<EQ>
-<INTEGER_CONST, 5>
-<ID, id_stringa>
-<EQ>
-<STRING_CONST, ciao come stai ? \t>
-<ID, id_stringa_complex>
-<EQ>
-<STRING_CONST, Questa
-è
-una
-id_stringa>
+<CASE>
+<ID, exp>
+<IS>
+<WHEN>
+<INTEGER_CONST, 1>
+<DO>
+<WRITELN>
+<STRING_CONST,  morning!>
+<SEMI>
+<WHEN>
+<INTEGER_CONST, 2>
+<DO>
+<WRITELN>
+<STRING_CONST,  command or file name!>
+<SEMI>
+<WHEN>
+<INTEGER_CONST, 3>
+<DO>
+<WRITELN>
+<STRING_CONST, , world!>
+<SEMI>
+<ELSE>
+<WRITELN>
+<STRING_CONST,  not found!>
+<SEMI>
+<END>
+<CASE>
+<SEMI>
+<END>
+<MAIN>
+<SEMI>

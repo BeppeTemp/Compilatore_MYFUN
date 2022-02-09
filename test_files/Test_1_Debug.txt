@@ -1,0 +1,25 @@
+main
+    integer exp := 5;
+    case exp is
+        when 1 do
+            ?. ' morning!';
+        when 2 do
+            ?. ' command or file name!';
+        when 3 do
+            ?. ', world!';
+        else
+            ?. ' not found!';
+        end case;
+
+        
+    case 5+5 is
+        when 'ciao' do
+            ?. ' morning!';
+        when 2 do
+            ?. ' command or file name!';
+        when 3 do
+            ?. ', world!';
+        else
+            ?. ' not found!';
+        end case;
+end main;

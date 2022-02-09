@@ -6,7 +6,7 @@
             "name": "Launch Test 1",
             "request": "launch",
             "mainClass": "Tester",
-            "args": "test_files/Desktop/Test_1_Debug.txt"
+            "args": "test_files/Test_1_Debug.txt"
         },
         {
             "type": "java",

@@ -100,6 +100,10 @@ Comment_Line_Start_II = "//"
     "string"        {return symbol(sym.STRING);}
     "integer"       {return symbol(sym.INTEGER);}
     "main"          {return symbol(sym.MAIN);}
+    "case"          {return symbol(sym.CASE);}
+    "is"            {return symbol(sym.IS);}
+    "when"          {return symbol(sym.WHEN);}
+    "do"            {return symbol(sym.DO);}
 
     // Spazi
     {White_Space}   { }
