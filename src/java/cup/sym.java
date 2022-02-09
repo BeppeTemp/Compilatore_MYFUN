@@ -10,10 +10,11 @@ public interface sym {
   /* terminals */
   public static final int POW = 21;
   public static final int GE = 14;
-  public static final int INTEGER_CONST = 49;
+  public static final int INTEGER_CONST = 50;
   public static final int INTEGER = 45;
   public static final int SEMI = 9;
   public static final int OUT = 4;
+  public static final int FOR = 47;
   public static final int MINUS = 25;
   public static final int WRITE = 31;
   public static final int NOT = 11;
@@ -32,12 +33,12 @@ public interface sym {
   public static final int IF = 36;
   public static final int ASSIGN = 27;
   public static final int WRITELN = 30;
-  public static final int ID = 52;
+  public static final int ID = 53;
   public static final int LE = 16;
   public static final int EOF = 0;
   public static final int WRITEB = 29;
   public static final int RETURN = 7;
-  public static final int TRUE = 47;
+  public static final int TRUE = 48;
   public static final int error = 1;
   public static final int NULL = 10;
   public static final int DIVINT = 23;
@@ -51,14 +52,14 @@ public interface sym {
   public static final int _uminus = 2;
   public static final int WHILE = 33;
   public static final int STR_CONCAT = 20;
-  public static final int REAL_CONST = 50;
+  public static final int REAL_CONST = 51;
   public static final int THEN = 35;
   public static final int NE = 18;
   public static final int END = 37;
   public static final int STRING = 44;
   public static final int LPAR = 41;
-  public static final int FALSE = 48;
-  public static final int STRING_CONST = 51;
+  public static final int FALSE = 49;
+  public static final int STRING_CONST = 52;
   public static final int GT = 15;
   public static final int VAR = 5;
   public static final String[] terminalNames = new String[] {
@@ -109,6 +110,7 @@ public interface sym {
   "STRING",
   "INTEGER",
   "MAIN",
+  "FOR",
   "TRUE",
   "FALSE",
   "INTEGER_CONST",

@@ -225,6 +225,8 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
             statNode.ifStatNode.accept(this);
         } else if (statNode.whileStatNode != null) {
             statNode.whileStatNode.accept(this);
+        } else if (statNode.forStatNode != null) {
+            statNode.forStatNode.accept(this);
         } else if (statNode.readStatNode != null) {
             statNode.readStatNode.accept(this);
         } else if (statNode.writeStatNode != null) {
@@ -342,6 +344,61 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
     }
 
     @Override
+    public void visit(ForStatNode forStatNode) {
+        // Creo una nuova tabella e setto il padre come il top dello stack (Il
+        // chiamante) e inserisco
+        SymbolTable symbolTable = new SymbolTable(forStatNode.name);
+        symbolTable.setFatherSymTab(stack.peek());
+        stack.push(symbolTable);
+
+        SymbolTable picked = stack.peek();
+        
+        forStatNode.constNode.accept(this);
+        forStatNode.type = forStatNode.constNode.type;
+        if (forStatNode.expr.type == ValueType.string) {
+            System.err.println("[ERRORE SEMANTICO] dichiarazione dello statement for di tipo incorretto (stringa)");
+            System.exit(1);
+        }        
+
+        if (!picked.createEntry_variable(forStatNode.id.value, forStatNode.type)) {
+            System.out.println("[ERRORE SEMANTICO] variabile " + forStatNode.id.value + " già dichiarata nel T.E. " + stack.peek().symbolTableName);
+            System.exit(1);
+        }
+
+        forStatNode.id.accept(this);
+
+
+        // Controllo che il tipo dell'espressione del WHILE, sia un booleano
+        forStatNode.expr.accept(this);
+        if (forStatNode.expr.type != ValueType.bool) {
+            System.err.println("[ERRORE SEMANTICO] espressione dello statement for di tipo non bool");
+            System.exit(1);
+        }
+
+        forStatNode.assignStatNode.accept(this);
+
+        // Controllo la lista di dichiarazioni di variabili
+        for (VarDeclNode varDeclNode : forStatNode.varDeclList)
+            varDeclNode.accept(this);
+
+        // Controllo la lista di statements
+        for (StatNode statNode : forStatNode.statList)
+            statNode.accept(this);
+
+        // DEBUG
+        if (debugTab) {
+            System.out.println("Tabella " + stack.peek().symbolTableName + " | padre: " + stack.peek().fatherSymbolTable.symbolTableName + " |");
+            for (String key : stack.peek().keySet())
+                System.out.println(key + ": " + stack.peek().get(key).toString());
+            System.out.println("-----------------------------------------------------");
+        }
+
+        // Rimuovo la ST dallo stack, in quanto non serve più
+        stack.pop();
+
+    }
+
+    @Override
     public void visit(ReadStatNode readStatNode) {
         // Controllo il tipo dell'espressione della READ, se c'è
         if (readStatNode.expr != null) {
@@ -433,7 +490,7 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
         SymbolTableEntry functionDef = symbolTable.containsFunctionEntry(symbolTable.symbolTableName);
 
         // Risalgo fino alla tabella Global
-        while (functionDef == null){
+        while (functionDef == null) {
             symbolTable = symbolTable.fatherSymbolTable;
             functionDef = symbolTable.containsFunctionEntry(symbolTable.symbolTableName);
         }

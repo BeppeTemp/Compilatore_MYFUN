@@ -10,7 +10,7 @@ terminal _uminus;
 // TERMINALS
 terminal LOOP, OUT, VAR, OUTPAR, RETURN, COMMA, SEMI, NULL, NOT, OR, AND, GE, GT, LE, LT, NE,
     EQ, STR_CONCAT, POW, DIV, DIVINT, TIMES, MINUS, PLUS, ASSIGN, WRITET, WRITEB, WRITELN, WRITE, READ,
-    WHILE, ELSE, THEN, IF, END, FUN, COLON, RPAR, LPAR, BOOL, REAL, STRING, INTEGER, MAIN;
+    WHILE, ELSE, THEN, IF, END, FUN, COLON, RPAR, LPAR, BOOL, REAL, STRING, INTEGER, MAIN, FOR;
 terminal Boolean TRUE, FALSE;
 terminal Integer INTEGER_CONST;
 terminal Double REAL_CONST;
@@ -19,7 +19,7 @@ terminal String STRING_CONST, ID;
 // NON TERMINALS
 nonterminal Program, VarDecList, FunList, Main, VarDecl, Type, IdListInit, IdListInitObbl, IdList,
     Expr, Const, ParamDeclList, StatList, Fun, CallFun, ExprList, ParDecl, NonEmptyParamDeclList, Stat, IfStat,
-    WhileStat, ReadStat, WriteStat, AssignStat, Else;
+    WhileStat, ReadStat, WriteStat, AssignStat, Else, ForStat;
 
 
 // PRECEDENCES
@@ -121,6 +121,7 @@ Main ::= MAIN VarDecList:varDecList StatList:statList END MAIN SEMI            {
 // TESTED ✅
 Stat ::= IfStat:ifStat SEMI                                                                 {: RESULT = new StatNode((IfStatNode) ifStat); :}
     | WhileStat:whileStat SEMI                                                              {: RESULT = new StatNode((WhileStatNode) whileStat); :}
+    | ForStat:forStat SEMI                                                                  {: RESULT = new StatNode((ForStatNode) forStat); :}
     | ReadStat:readStat SEMI                                                                {: RESULT = new StatNode((ReadStatNode) readStat); :}
     | WriteStat:writeStat SEMI                                                              {: RESULT = new StatNode((WriteStatNode) writeStat); :}
     | AssignStat:assignStat SEMI                                                            {: RESULT = new StatNode((AssignStatNode) assignStat); :}
@@ -160,6 +161,10 @@ Else ::= /* empty */                                                            
 
 // TESTED ✅
 WhileStat ::= WHILE Expr:expr LOOP VarDecList:varDecList StatList:statList END LOOP         {: RESULT = new WhileStatNode((ExprNode) expr, (ArrayList<VarDeclNode>) varDecList, (ArrayList<StatNode>) statList); :}
+;
+
+// TESTED ✅
+ForStat ::= FOR VAR ID:id ASSIGN Const:constant SEMI Expr:expr SEMI AssignStat:assignStat LOOP VarDecList:varDecList StatList:statList END LOOP         {: RESULT = new ForStatNode(new LeafID(id), (ConstNode) constant, (ExprNode) expr, (AssignStatNode) assignStat, (ArrayList<VarDeclNode>) varDecList, (ArrayList<StatNode>) statList); :}
 ;
 
 // TESTED ✅

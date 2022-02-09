@@ -43,11 +43,9 @@ char *concatString(char *string, char *toConcat) {
 
 // Funzione Main
 int main() {
-    int x;
-    char *y = malloc(512 * sizeof(char));
-    scanf("%d", &x);
-    scanf("%s", y);
-    printf("%d", x);
-    printf("%s", y);
+    for (int x = 0; x <= 10; x = x + 1) {
+        printf("%s", "ciao");
+        printf("\r\n");
+    }
     return 0;
 }

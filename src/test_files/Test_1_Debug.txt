@@ -1,10 +1,5 @@
 main
-    integer x;
-    string y;
-
-    % x;
-    % y;
-
-    ? x;
-    ? y;
+    for var x := 0; x <= 10; x := x + 1 loop
+        ?. "ciao";
+    end loop;
 end main;

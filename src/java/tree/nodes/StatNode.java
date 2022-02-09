@@ -10,6 +10,7 @@ public class StatNode implements Semantic_Int_Visitable, CodeGen_Int_Visitable {
     public String name = "StatNode";
     public IfStatNode ifStatNode = null;
     public WhileStatNode whileStatNode = null;
+    public ForStatNode forStatNode = null;
     public ReadStatNode readStatNode = null;
     public WriteStatNode writeStatNode = null;
     public AssignStatNode assignStatNode = null;
@@ -23,6 +24,10 @@ public class StatNode implements Semantic_Int_Visitable, CodeGen_Int_Visitable {
 
     public StatNode(WhileStatNode whileStatNode) {
         this.whileStatNode = whileStatNode;
+    }
+
+    public StatNode(ForStatNode forStatNode) {
+        this.forStatNode = forStatNode;
     }
 
     public StatNode(ReadStatNode readStatNode) {

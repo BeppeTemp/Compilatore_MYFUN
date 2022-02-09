@@ -281,6 +281,10 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
             statNode.whileStatNode.accept(this);
         }
 
+        if (statNode.forStatNode != null) {
+            statNode.forStatNode.accept(this);
+        }
+
         if (statNode.readStatNode != null) {
             statNode.readStatNode.accept(this);
         }
@@ -355,6 +359,31 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
     }
 
     @Override
+    public void visit(ForStatNode forStatNode) {
+        wr.print("for(");
+        wr.print(this.convert_type(forStatNode.type));
+        wr.print(" ");
+        forStatNode.id.accept(this);
+        wr.print(" = ");
+        forStatNode.constNode.accept(this);
+        wr.print("; ");
+        forStatNode.expr.accept(this);
+        wr.print("; ");
+        forStatNode.assignStatNode.accept(this);
+        wr.print(") {\n");
+
+        for (VarDeclNode varDeclNode : forStatNode.varDeclList) {
+            varDeclNode.accept(this);
+        }
+
+        for (StatNode statNode : forStatNode.statList) {
+            statNode.accept(this);
+        }
+
+        wr.print("\n}\n");
+    }
+
+    @Override
     public void visit(ReadStatNode readStatNode) {
         if (readStatNode.expr != null) {
             wr.print("printf(\"%s\", ");
@@ -412,7 +441,7 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
         assignStatNode.leafID.accept(this);
         wr.print(" = ");
         assignStatNode.expr.accept(this);
-        wr.print(";\n");
+        // wr.print(";\n");
     }
 
     @Override
