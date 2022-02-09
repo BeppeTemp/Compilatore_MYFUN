@@ -19,12 +19,14 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
     // Costruttore
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public CodeGen_Visitor(String name) throws IOException {
-        File file = new File("src/test_files/c_out/" + name.substring(0, name.length() - 4).split("/")[2] + ".c");
+        int lastIndex = name.lastIndexOf(File.separator);
+
+        File file = new File("test_files" + File.separator + "c_out" + File.separator + name.substring(lastIndex, name.length() - 4) + ".c");
         if (file.exists()) {
-            file.delete();
+             file.delete();
         }
         file.createNewFile();
-        System.out.print("File " + file.getName() + " creato nella cartella \"src/test_files/c_out\" !!!");
+        System.out.print("File " + file.getName() + " creato nella cartella \"test_files" + File.separator + "c_out\" !!!");
 
         wr = new PrintWriter(file);
     }
