@@ -280,30 +280,34 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
 
     @Override
     public void visit(ElseNode elseNode) {
-        // Creo una nuova tabella e setto il padre come il top dello stack (Il
-        // chiamante) e inserisco
-        SymbolTable symbolTable = new SymbolTable(elseNode.name);
-        symbolTable.setFatherSymTab(stack.peek());
-        stack.push(symbolTable);
+        if (elseNode.ifStatNode != null) {
+            elseNode.ifStatNode.accept(this);
+        } else {
+            // Creo una nuova tabella e setto il padre come il top dello stack (Il
+            // chiamante) e inserisco
+            SymbolTable symbolTable = new SymbolTable(elseNode.name);
+            symbolTable.setFatherSymTab(stack.peek());
+            stack.push(symbolTable);
 
-        // Controllo la lista di dichiarazioni di variabili
-        for (VarDeclNode varDeclNode : elseNode.varDeclList)
-            varDeclNode.accept(this);
+            // Controllo la lista di dichiarazioni di variabili
+            for (VarDeclNode varDeclNode : elseNode.varDeclList)
+                varDeclNode.accept(this);
 
-        // Controllo la lista di statements
-        for (StatNode statNode : elseNode.statList)
-            statNode.accept(this);
+            // Controllo la lista di statements
+            for (StatNode statNode : elseNode.statList)
+                statNode.accept(this);
 
-        // DEBUG
-        if (debugTab) {
-            System.out.println("Tabella " + stack.peek().symbolTableName + " | padre: " + stack.peek().fatherSymbolTable.symbolTableName + " |");
-            for (String key : stack.peek().keySet())
-                System.out.println(key + ": " + stack.peek().get(key).toString());
-            System.out.println("-----------------------------------------------------");
+            // DEBUG
+            if (debugTab) {
+                System.out.println("Tabella " + stack.peek().symbolTableName + " | padre: " + stack.peek().fatherSymbolTable.symbolTableName + " |");
+                for (String key : stack.peek().keySet())
+                    System.out.println(key + ": " + stack.peek().get(key).toString());
+                System.out.println("-----------------------------------------------------");
+            }
+
+            // Rimuovo la ST dallo stack, in quanto non serve più
+            stack.pop();
         }
-
-        // Rimuovo la ST dallo stack, in quanto non serve più
-        stack.pop();
     }
 
     @Override
@@ -433,7 +437,7 @@ public class Semantic_Visitor implements Semantic_Int_Visitor {
         SymbolTableEntry functionDef = symbolTable.containsFunctionEntry(symbolTable.symbolTableName);
 
         // Risalgo fino alla tabella Global
-        while (functionDef == null){
+        while (functionDef == null) {
             symbolTable = symbolTable.fatherSymbolTable;
             functionDef = symbolTable.containsFunctionEntry(symbolTable.symbolTableName);
         }

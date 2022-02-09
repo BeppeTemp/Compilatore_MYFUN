@@ -327,16 +327,21 @@ public class CodeGen_Visitor implements CodeGen_Int_Visitor {
 
     @Override
     public void visit(ElseNode elseNode) {
-        wr.print("else {\n");
+        if (elseNode.ifStatNode != null) {
+            wr.print("else ");
+            elseNode.ifStatNode.accept(this);
+        } else {
+            wr.print("else {\n");
 
-        for (VarDeclNode varDeclNode : elseNode.varDeclList) {
-            varDeclNode.accept(this);
+            for (VarDeclNode varDeclNode : elseNode.varDeclList) {
+                varDeclNode.accept(this);
+            }
+            for (StatNode statNode : elseNode.statList) {
+                statNode.accept(this);
+            }
+    
+            wr.print("} ");
         }
-        for (StatNode statNode : elseNode.statList) {
-            statNode.accept(this);
-        }
-
-        wr.print("} ");
     }
 
     @Override

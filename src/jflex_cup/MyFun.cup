@@ -10,7 +10,7 @@ terminal _uminus;
 // TERMINALS
 terminal LOOP, OUT, VAR, OUTPAR, RETURN, COMMA, SEMI, NULL, NOT, OR, AND, GE, GT, LE, LT, NE,
     EQ, STR_CONCAT, POW, DIV, DIVINT, TIMES, MINUS, PLUS, ASSIGN, WRITET, WRITEB, WRITELN, WRITE, READ,
-    WHILE, ELSE, THEN, IF, END, FUN, COLON, RPAR, LPAR, BOOL, REAL, STRING, INTEGER, MAIN;
+    WHILE, ELSE, THEN, IF, END, FUN, COLON, RPAR, LPAR, BOOL, REAL, STRING, INTEGER, MAIN, ELIF;
 terminal Boolean TRUE, FALSE;
 terminal Integer INTEGER_CONST;
 terminal Double REAL_CONST;
@@ -155,7 +155,8 @@ IfStat ::= IF Expr:expr THEN VarDecList:varDecList StatList:statList Else:else_v
 
 // TESTED ✅
 Else ::= /* empty */                                                                        {: RESULT = null; :}
-    | ELSE VarDecList:varDecList StatList:statList                                          {: RESULT = new ElseNode((ArrayList<VarDeclNode>) varDecList, (ArrayList<StatNode>) statList); :}
+    | ELSE VarDecList:varDecList StatList:statList                                          {: RESULT = new ElseNode((ArrayList<VarDeclNode>) varDecList, (ArrayList<StatNode>) statList, null); :}
+    | ELIF Expr:expr THEN VarDecList:varDecList StatList:statList Else:else_val             {: RESULT = new ElseNode(null, null, new IfStatNode((ExprNode) expr, (ArrayList<VarDeclNode>) varDecList, (ArrayList<StatNode>) statList, (ElseNode) else_val)); :}
 ;
 
 // TESTED ✅

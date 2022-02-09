@@ -100,6 +100,7 @@ Comment_Line_Start_II = "//"
     "string"        {return symbol(sym.STRING);}
     "integer"       {return symbol(sym.INTEGER);}
     "main"          {return symbol(sym.MAIN);}
+    "elif"          {return symbol(sym.ELIF);}
 
     // Spazi
     {White_Space}   { }

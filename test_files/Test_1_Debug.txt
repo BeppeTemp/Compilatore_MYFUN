@@ -1,0 +1,13 @@
+main
+    integer x := 2;
+    if x = 1 then
+        ?. "ok";
+    elif x = 2 then
+        ?. "spettacolo";
+    elif x = 3 then
+        ?. "ciaone";
+    else
+        ?. "ci";
+    end if;
+end main;
+
